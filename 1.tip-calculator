@@ -1,0 +1,720 @@
+# Prework - TipCalculator (Archived)
+
+Goals
+
+* Get familiar with React Native
+* How to to build app on iOS and Android
+
+## Walkthrough videos
+
+1. [Intro and using tip amount](https://youtu.be/DpyEcX_iGFw) [1:01m)
+2. [Prepare En](https://youtu.be/bWT11Q1PPAE)[vironment](https://youtu.be/bWT11Q1PPAE) [4:45m]
+3. [Init project](https://www.youtube.com/watch?v=UZ-I0I_7rBc)(Uploading...) [7:08m] (skip)
+4. [Go through Calculator](https://www.youtube.com/watch?v=XG1zHa1HhKE)(Uploading...) [14:59m]
+
+## **Milestone 1**: Getting Started
+
+* This labs can be done on Window, Linux or Macs, so it's up to you guys !!! how powerful react native.
+* [Getting Started with React Native](https://github.com/coderschool/react_native_guides/wiki)
+* [How React Native complies](https://tadeuzagallo.com/blog/react-native-bridge/) 
+
+## **Milestone 2: **Initiate project
+
+Use the `react-native` command in the terminal to create a project and change to the project folder:
+
+```
+react-native init PreworkTipCalculator
+cd PreworkTipCalculator
+```
+
+
+You can use to build an iOS or an Android app:
+
+* Run Android app
+* react-native run-android
+    * If you have issues with Android, try restarting the ADB server
+    * adb kill-server
+        adb start-server
+    * If your emulators or your devices appear when you type command below, it works!!
+    * `adb devices`
+* Run iOS app (MacOS only)
+* react-native run-ios
+
+* Finally, when both devices working properly, and try to change some text in `index.ios.js` or `index.android.js`
+* Reload both emulators to see the changes
+    * Reload iOS: `⌘ + R` or ` ⌘ + D `
+    * Reload Android: double tap R on your keyboard to reload or `⌘ + M`
+* [Image: Screen Shot 2017-02-21 at 14.53.42.png]
+
+### Node.JS Server
+
+When you build for the first time, you will see another terminal appears. Don't worry about this nodejs server for now (please leave it running).
+
+* [Image: Screen Shot 2017-02-27 at 14.14.33.png]
+
+### Errors - troubleshoot
+
+There are many kinds of errors in RN and they can be confusing initially. Below are some common errors in RN 
+
+Note, we will assume we will work with `index.android.js`
+
+* Missing Component: Change your index.android.js as the snippet below, by adding TextInput
+* ...
+    export default class PreworkTipCalculator extends Component {
+      render() {
+        return (
+          <View style={styles.container}>
+            <Text style={styles.welcome}>
+              Welcome to React Native!
+            </Text>
+    
+            <TextInput
+              placeholder="Username or Email"
+              placeholderTextColor="pink"
+              returnKeyType="next"            
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </View>
+        );
+      }
+    }
+    ...
+
+        * An error happen....”Can't find variable: TextInput” and the next like of error will be show where exactly error happen, in this case the error at file index.android.js line 17 method render()....
+        * [Image: Screen Shot 2017-02-27 at 13.36.25.png]
+
+        * Why ? TextInput is kind of Component of RN and when you add to RN but you don't tell RN that you need TextInput Component that reason why you have to add TextInput Component on “react-native”
+        * [Image: fix_missing_component_rn.gif]
+    * Wrapped, all syntax in render method is called JSX, same as HTML, always have open tag and close tag, such as <View>bla bla...</View> or <Text>bla bla..</Text> [Ref: https://facebook.github.io/react/docs/jsx-in-depth.html]. As picture below, you can see the message is “Expected corresponding JSX closing tag for <Text>”
+    * [Image: Screen Shot 2017-02-27 at 14.54.42.png]
+    * RawText (this error I just discovered, quite strange), this happen because you have space between JSX tag, as a snippet below, error will happen
+    * <Text style={styles.welcome}>
+            Text 1
+        </Text> <Text style={styles.welcome}>
+            Text 2
+        </Text>
+    * [Image: Screen Shot 2017-02-27 at 14.57.59.png]
+    * How to fix it, just add break like between tags
+    * <Text style={styles.welcome}>
+            Text 1
+        </Text> 
+        <Text style={styles.welcome}>
+            Text 2
+        </Text>
+
+## **Milestone 3: Pre-**coding...!!! it's not fun :-o
+
+#We will focus on Android first, then back to iOS later...
+#Our goals:
+
+* Understand how RN work
+* Using Navigator
+* Using AsyncStorage to store data
+
+### Components
+
+#Make some fun
+
+    1. Create Apps folder and files: calculator.js, customNavBar.js, powerRanger.js, settings.js
+    2. [Image: Screen Shot 2017-02-23 at 23.42.29.png]
+    3. index.android.js: Remove all unnecessary tag. This code will get component from app.js, then you don't need to care this file any more. The idea is trying to reused components as much as you can. Based on that when you build RN on iOS, it will save your time
+        1. <Calculator /> is a component was made by calculator.js, by this way we can spend less time for both version by reused component.
+    4. import React, { Component } from 'react';
+        import { AppRegistry, View, Text } from 'react-native';
+        
+        import Calculator from './Apps/calculator.js';
+        
+        export default class PreworkTipCalculator extends Component {
+          render() {
+            return (
+              <Calculator />
+            );
+          }
+        }
+        
+        AppRegistry.registerComponent('PreworkTipCalculator', () => PreworkTipCalculator);
+    5. Calculator compinent (calculator.js) 
+    6. import React, {Component} from 'react';
+        import {AppRegistry,  Text, View} from 'react-native';
+        
+        export default class Calculator extends Component {
+          render() {
+            return (
+              <View style={{margin:50}}>
+                <Text>Fck ya !</Text>
+              </View>
+            )
+          }
+        }
+        
+        module.exports = Calculator;
+    7. Refresh Android app and a miracle happen :-D. Now, hope you have imaged how RN work with Components, you can find list of build-in components at https://facebook.github.io/react-native/docs/getting-started.html#content (Left menu, COMPONENTS section)
+1. [Image: Screen Shot 2017-02-23 at 16.57.22.png]
+
+### React native COncepts
+
+#Before we have fun, here are concepts in RN that you have to on your hand
+
+1. State and Props: https://facebook.github.io/react-native/docs/state.html, kind of place to store data, get and set value.
+    1. props: data set by parent and will keep remain during lifetime of a component 
+    2. state: for data that you are going to change, you have to use state
+2. Flex layout: https://facebook.github.io/react-native/docs/flexbox.html, but follow this video you will find out that why is Flex so so simple !!! https://www.youtube.com/watch?v=SdMNKkAiil4 (duration: 7m). This is very important knowledge that you need to know.
+
+### React native Menu 
+
+#**This is very important step that you need to remember, b/c it will support you for RN development**
+
+    1. iOS emulator: `Command + Control + Z or Command + D`
+    2. Android emulator: `Command + M`
+    3. Debug JS Remotely: enable “Debug JS Remotely” in RN menu and a chrome browser will open, then open Inspect in Chrome to debug...(I love it) [Ref: https://facebook.github.io/react-native/docs/debugging.html#chrome-developer-tools]
+        1. iOS emulator: `Command + Control + Z or Command + D => Debug JS Remotely (`
+        2. Android emulator: `Command + M` => Debug JS Remotely``
+        3. Disable Debug JS Remotely: just do same way to turn on Debug, just open menu and select “Stop Remote JS Debugging”
+        4. Normally this will open browser, in case it's not, here is the place for you to debug http://localhost:8081/debugger-ui and open Inspect and select Source Tab, hit `Command + P` to open files that you want to debug.
+1. [Image: Screen Shot 2017-02-27 at 14.34.46.png]
+2. [Image: Screen Shot 2017-02-23 at 17.11.54.png]
+3. Enable Live Reload (select in RN menu): you don't need to reload every time you change something, RN will help you.
+4. [Image: using_live_load.gif]
+5. Show Inspector: inspect JSX elements like you inspect HTML elements.
+
+## **Milestone 4: **Calculatorrrrrr !!! yeahhhh (Those milestones will be done by Walkthrough video)
+
+### Layout DESIGN
+
+This is an ugly layout that you will build, but if you can make it better, a big Gift is waiting for you !!!
+
+1. [Image: Screen Shot 2017-02-23 at 16.59.11.png]
+
+### INSTAll External Component
+
+Install Segment Control, do not apply segmentControl on https://facebook.github.io/react-native/docs/getting-started.html#content b/c this control was designed for iOS only, will not work on Android. So we have to use external component (bla bla is not supported in this platform!) [As image below, I try to useSegmentedControlIOS on Android]
+
+1. [Image: Screen Shot 2017-02-27 at 14.10.16.png]
+    1. Link https://github.com/kirankalyan5/react-native-segmented-control-tab, open terminal on your PreworkTipCalculator directory and type command below.
+    2. npm install react-native-segmented-control-tab --save
+    3. Re-build app again to make sure new component has installed properly, I can say 95% we don't need re-build app again.
+    4. react-native run-android
+
+    1. 
+
+## Milestone 4.1 - Calculator page
+
+### Design layout
+
+#By Flex (ref: https://facebook.github.io/react-native/docs/flexbox.html)
+
+### Structure file (calculator.js)
+
+    1. import React, {Component} from "react";
+        import {AppRegistry, Text, View} from "react-native";
+        
+        export default class Calculator extends Component{
+          // Where you put methods was called from layout
+          render(){
+            return (
+              {/*Place you put JSX tag to design you layout*/}
+              <View></View>
+            )
+          }
+        }
+        
+        // StyleSheet - custom style
+        var stylesCSS = StyleSheet.create({
+        
+        });
+        
+        // Export Compoment
+        module.exports = Calculator;
+
+### Layout 
+
+    1. ...
+        render(){
+            return (
+              <View style={{marginTop:30,padding:10}}>
+                {/*Header*/}
+                <View>
+                  <Text style={stylesCSS.header}>Tip Calculator</Text>
+                </View>
+                {/*End Header*/}
+                <View>
+                  {/*Bill amount field*/}
+                  <View style={stylesCSS.space, stylesCSS.billStyle}>
+                    <Text style={stylesCSS.billLabel}>Bill amount</Text>
+                    <TextInput
+                      style={stylesCSS.inputAmount}
+                      onChangeText={(billAmount) => this.conChangeCalculateTotal(billAmount)}
+                      value={this.state.billAmount}
+                      keyboardType='numeric'
+                      maxLength={10}
+                    />
+                  </View>
+                  {/*End Bill amount field*/}
+        
+                  {/*Tip amount field*/}
+                  <View style={stylesCSS.space, stylesCSS.billStyle}>
+                    <Text style={stylesCSS.billLabel}>Tip amount</Text>
+                    <Text style={stylesCSS.tipResult}>{this.state.tipAmount}</Text>
+                  </View>
+                  {/*End Bill amount field*/}
+        
+                  {/*Segment Control*/}
+                  <View style={stylesCSS.space}>
+                  <SegmentedControlTab values={this.returnTipPercet()}
+                    onTabPress= {(index) => this.handleSegmentChange(index) }
+                  />
+                  {/*End Segment Control*/}
+                  </View>
+                </View>
+        
+                <View style={stylesCSS.space}>
+                  <Text>Bill amount: {this.state.billAmount}</Text>
+                  <Text>Tip amount: {this.state.tipAmount}</Text>
+                  <Text>Percent: {this.convertTipPercet(this.state.tipPercent)}</Text>
+                </View>
+        
+                <View style={stylesCSS.space}>
+                  <Text style={stylesCSS.inputResult}>Result: {this.state.result}</Text>
+                </View>
+              </View>
+            )
+          }
+        
+        ....
+
+### Styles
+
+    1. ...
+        // StyleSheet
+        var stylesCSS = StyleSheet.create({
+          billStyle: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 15
+          },
+          billLabel: {
+            fontSize: 20,
+            marginRight: 10
+          },
+          header: {
+            fontWeight:'bold',
+            color:'black',
+            textAlign:'center',
+            fontSize:30,
+            marginBottom:10
+          },
+          tipResult: {
+            fontSize: 20
+          },
+          space: {
+            marginTop: 20
+          },
+          inputAmount: {
+            height: 40,
+            padding:10,
+            borderColor: 'black',
+            borderWidth: 2,
+            flex: 1,
+          },
+          inputResult: {
+            fontWeight: 'bold',
+            fontSize: 15
+          }
+        });
+        ...
+
+### Methods
+
+    1. ...
+        export default class Calculator extends Component{
+          constructor(props){
+            super(props);
+            this.state = {
+               billAmount : '', 
+               tipAmount : 0.00, 
+               tipPercent : 0, 
+               result: 0
+             }
+        
+            // Bind data selectd segment
+            this.handleSegmentChange = this.handleSegmentChange.bind(this);
+          }
+        
+          handleSegmentChange(index) {
+            this.setState({
+                tipPercent: index
+            });
+        
+            // Update result when segment was changed
+            this.conChangeCalculateTotal(this.state.billAmount, index);
+          }
+        
+          // Mail function,
+          conChangeCalculateTotal(bill, index){
+            if(!index && index != 0){
+              index = this.state.tipPercent;
+            }
+        
+            // Check bill is not a number
+            if(isNaN(bill) || !bill){
+              bill = 0;
+            }
+        
+            bill = parseFloat(bill);
+        
+            var tip = this.calculateTipTotal(bill, index);
+            this.setState({
+              tipAmount: tip.toFixed(2),
+              billAmount: bill + "", // !!! Do you know why I have to plus "" ? try to remove it and see what is the error. 
+              result: parseFloat(bill + tip)
+            })
+          }
+        
+          // Multiply billAmount and percet to get tip amount
+          calculateTipTotal(billAmount, tipPercent){
+            return billAmount * this.convertTipPercet(tipPercent);
+          }
+        
+          // Convert Tip index to percent
+          convertTipPercet(tipIndex){
+            var percents = this.returnTipPercet();
+            return parseFloat(percents[tipIndex])/100;
+          }
+        
+          // Defined percent
+          returnTipPercet(){
+            return ['10%', '15%', '50%'];
+          }
+        
+          render(){
+           ...
+          }
+        }
+        
+        ...
+
+### build
+
+Add calculator component to index.android.js
+
+```
+import Calculator from './Apps/calculator.js';
+  ...
+  render() {
+    return (
+     <Calculator />
+    );
+  }
+```
+
+**DONE**
+
+
+
+
+
+## Milestone 4.2 - Settings page
+
+### Structure file (setting.js)
+
+Create a setting.js with standard structure of RN
+
+### Layout 
+
+    1. ...
+        render(){
+            return(
+              <View style={{marginTop:50,padding:10}}>
+                <View>
+                  <Text style={{fontSize:25}}>Scene Transitions</Text>
+                  <Picker
+                    selectedValue={this.state.sceneTransition}
+                    onValueChange={(scene) => this.setSelectSceneTransition(scene)}>
+                    <Picker.Item label="FloatFromRight" value="FloatFromRight" />
+                    <Picker.Item label="FloatFromLeft" value="FloatFromLeft" />
+                    <Picker.Item label="FloatFromBottom" value="FloatFromBottom" />
+                    <Picker.Item label="FloatFromBottomAndroid" value="FloatFromBottomAndroid" />
+                    <Picker.Item label="SwipeFromLeft" value="SwipeFromLeft" />
+                    <Picker.Item label="HorizontalSwipeJump" value="HorizontalSwipeJump" />
+                    <Picker.Item label="HorizontalSwipeJumpFromRight" value="HorizontalSwipeJumpFromRight" />
+                  </Picker>
+                </View>
+              </View>
+            )
+          }
+          ...
+
+### Methods
+
+    1. ...
+        export default class Setting extends Component {
+          constructor(props){
+            super(props);
+            this.state = {sceneTransition: ''};
+            
+            // Get current storage scene selected
+            this.getSceneTransition();
+          }
+        
+          // set data to AsyncStorage
+          async setSceneTransition(scene){
+            try{
+              await AsyncStorage.setItem('SCENE_SELECTED', scene);
+              this.setState({
+                sceneTransition : scene
+              })
+            }catch(error){
+               console.log("Hmm, something when wrong when set data..." + error);
+            }
+          }
+        
+          // get data to AsyncStorage
+          async getSceneTransition(){
+            try{
+              let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED");
+              this.setState({
+                sceneTransition : sceneTransitionValue
+              });
+            }catch(error){
+              console.log("Hmm, something when wrong wehen get data..." + error);
+            }
+          }
+        
+          // this method will be called when scene loaded
+          componentDidMount(){
+            this.getSceneTransition();
+          }
+        
+          // action to set select value to AsyncStorage
+          setSelectSceneTransition(scene){
+            try {
+              this.setSceneTransition(scene);
+              this.setState({
+                scene: scene
+              });
+            } catch (error) {
+              console.log("Oop!! Something went wrong !!!" + error);
+            }
+          }
+          // Render
+          render(){
+          
+        ...
+
+### RUN RUN RUN...(update index.android.js)
+
+1. ...
+    import Setting from './Apps/settings.js';
+    
+    ...
+      render() {
+        return (
+          <Setting />
+        );
+      }
+    ...
+
+## Milestone 5
+
+### Navigator
+
+Hehehe (working in powerranger.js and customNavBar.js file)
+
+    1. powerranger.js, this file will be prepared Navigator and how to achieve data from AsyncStorage.
+    2. ...
+        
+        // Add Calculator component
+        import Calculator from "../Apps/calculator.js";
+        
+        // Add Setting component
+        import Settings from "../Apps/settings.js";
+        
+        // Add custom nav bar, just for make your code more clean
+        import CustomNavBar from "../Apps/customNavBar.js";
+        
+        export default class PowerRanger extends Component {
+          constructor(props) {
+            super(props);
+            this.state = {sceneTransition: this.getSceneTransition()}
+          }
+        
+          // get data from AsyncStorage
+          async getSceneTransition(){
+            try{
+              let sceneTransitionValue = await AsyncStorage.getItem("SCENE_SELECTED");
+              this.setState({
+                sceneTransition : sceneTransitionValue
+              });
+            }catch(error){
+              return '';
+            }
+          }
+        
+          // Render
+          render(){
+            return (
+              <Navigator
+                  initialRoute={{id: 'CalculatorPage', title: 'Tip Calculator Page'}}
+                  renderScene={this.renderScene.bind(this)}
+                  configureScene={(route) => {
+                    if (route.sceneConfig) {
+                      return route.sceneConfig;
+                    }
+                    return Navigator.SceneConfigs.FloatFromRight;
+                  }}
+                  navigationBar={CustomNavBar}
+                  configureScene={this.configureScene.bind(this)}
+                 />
+            );
+          }
+        
+          // config scene transition
+          configureScene(route, routeStack){
+            this.getSceneTransition();
+            switch (this.state.sceneTransition) {
+              case 'FloatFromRight':
+                return Navigator.SceneConfigs.FloatFromRight;
+                break;
+              case 'FloatFromLeft':
+                return Navigator.SceneConfigs.FloatFromLeft;
+                break;
+                case 'FloatFromBottom':
+                  return Navigator.SceneConfigs.FloatFromBottom;
+                  break;
+                case 'FloatFromBottom':
+                  return Navigator.SceneConfigs.FloatFromBottom;
+                  break;
+                case 'FloatFromBottomAndroid':
+                  return Navigator.SceneConfigs.FloatFromBottomAndroid;
+                  break;
+                case 'SwipeFromLeft':
+                  return Navigator.SceneConfigs.SwipeFromLeft;
+                  break;
+                case 'HorizontalSwipeJump':
+                  return Navigator.SceneConfigs.HorizontalSwipeJump;
+                  break;
+                case 'HorizontalSwipeJumpFromRight':
+                  return Navigator.SceneConfigs.HorizontalSwipeJumpFromRight;
+                  break;
+              default:
+                return Navigator.SceneConfigs.FloatFromBottom;
+            }
+          }
+        
+          // To navigate to page based on page ID
+          renderScene(route, navigator) {
+            switch (route.id) {
+              case 'CalculatorPage':
+                return (
+                  <Calculator navigator={navigator}/>
+                );
+                break;
+              case 'SettingPage':
+                return (
+                  <Settings navigator={navigator}/>
+                );
+                break;
+              default:
+                return (
+                  <Calculator navigator={navigator}/>
+                );
+            }
+          }
+        };
+        
+        module.exports = PowerRanger;
+
+### customNavBar.js
+
+This file was separated for easy to custom and control.
+
+    1. // Defined controls
+        var NavigationBarRouteMapper = {
+          LeftButton: (route, navigator, index, navState) =>{
+            return
+          },
+          RightButton: (route, navigator, index, navState) => {
+            if(route.id != 'CalculatorPage'){
+              return (
+                <TouchableOpacity style={stylesCSS.tabbarHeadr} onPress={() => navigator.pop()}>
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              );
+            }else{
+              return (
+                <TouchableOpacity style={stylesCSS.tabbarHeadr} onPress={() => navigator.push({id: 'SettingPage'})}>
+                  <Text style={stylesCSS.headerFontSize}>Setting</Text>
+                </TouchableOpacity>
+              );
+            }
+        
+          },
+          Title: (route, navigator, index, navState) => {
+            return;
+          },
+        }
+        
+        module.exports = (
+          <Navigator.NavigationBar
+            routeMapper={NavigationBarRouteMapper} />
+        )
+        
+        
+        var stylesCSS = StyleSheet.create({
+          tabbarHeadr: {
+            margin:10,
+          },
+          headerFontSize: {
+            fontSize: 15
+          }
+        })
+
+### BUILD
+
+Yayyyy, now you are full loaded, just try and run whole thing. Ah before that, remember update you **index.android.js **file, import controller from **powerranger.js**
+
+1. import PowerRanger from './Apps/powerRanger.js';
+    
+    ...
+    return (
+      <PowerRanger />
+    );
+2. [Image: android_final.gif]
+3. DissmisKeyBoard, remove keyboard (index.android.js)
+4. ...
+    // Add method
+    dismissKeyboard(){
+       Keyboard.dismiss();
+    }
+    
+    // Render
+    return (
+       <TouchableWithoutFeedback style={styleCSS.container} onPress={()=>this.dismissKeyboard()}>
+         <View style={styleCSS.container} >
+            <PowerRanger />
+          </View>
+       </TouchableWithoutFeedback>
+     );
+     
+    }
+     var styleCSS = StyleSheet.create({
+      container: {
+        flex:1
+      }
+    })
+    ...
+
+## Milestone 6 - Build on iOS
+
+1. Last but not least, basically you have done on Android but how about iOS, this is the most **_HARDEST_** part of RN, please pay attention, I just demo once time :D
+
+    1. Open index.android.js, copy whole file and count 5s in your mind....1...2...3...4...5...done
+    2. Open index.ios.js, paste all to here
+    3. Open terminal and build ios project
+    4. react-native run-ios
+
+[Image: android_ios_final.gif]
+## GAME OVER !!!
+
